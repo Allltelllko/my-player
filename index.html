@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molleculife Player</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .player-card {
+            background: linear-gradient(145deg, #1e1e1e, #252525);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            text-align: center;
+            width: 280px;
+        }
+        .track-info h2 { margin: 10px 0 5px; font-size: 20px; }
+        .track-info p { color: #888; margin: 0 0 20px; }
+
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.8); }
+        .btn-main {
+            background: #0088cc;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="player-card">
+        <div class="track-info">
+            <h2 id="title">Трек 1</h2>
+            <p id="artist">Molleculife Music</p>
+        </div>
+        
+        <audio id="audio-player"></audio>
+
+        <div class="controls">
+            <button class="btn" onclick="prevTrack()">⏮</button>
+            <button class="btn btn-main" onclick="togglePlay()" id="play-btn">▶</button>
+            <button class="btn" onclick="nextTrack()">⏭</button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const audio = document.getElementById('audio-player');
+        const btn = document.getElementById('play-btn');
+        const title = document.getElementById('title');
+
+        // Твой список треков (пока тестовые)
+        const playlist = [
+            { name: "Demo Track 1", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { name: "Demo Track 2", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { name: "Demo Track 3", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+        ];
+
+        let currentTrackIndex = 0;
+
+        function loadTrack(index) {
+            audio.src = playlist[index].url;
+            title.innerText = playlist[index].name;
+        }
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                btn.innerText = "⏸";
+            } else {
+                audio.pause();
+                btn.innerText = "▶";
+            }
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            loadTrack(currentTrackIndex);
+            audio.play();
+            btn.innerText = "⏸";
+        }
+
+        function prevTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            loadTrack(currentTrackIndex);
+            audio.play();
+            btn.innerText = "⏸";
+        }
+
+        // Загружаем первый трек при старте
+        loadTrack(currentTrackIndex);
+    </script>
+</body>
+</html>
